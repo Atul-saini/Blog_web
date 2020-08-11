@@ -7,8 +7,11 @@
 
     <h1><%=post.title%></h1>
     <p>
-    <%=post.content.substring(0, 100) + " ..."%>
+    <%=post.content.substr(0,100) + " ..."%>
+      <%  var len= content.length();%>
+      <%= if(len>100){%>
     <a href="/posts/<%=post.title%>">Read More</a>
+    <% } %>
     </p>
 
 

@@ -19,7 +19,10 @@ html {
 .navbar-nav  li a:hover {
     color: #1abc9c !important;
 }
-
+.btnn{
+  background-color: #1abc9c;
+  
+}
 .footer-padding {
 	padding-bottom: 60px;
 }
