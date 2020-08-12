@@ -13,10 +13,10 @@ const app = express();
 
 app.set('view engine', 'ejs');
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/blogDB", {useNewUrlParser: true});
+mongoose.connect("mongodb://localhost:27017/blogDB", { useNewUrlParser: true });
 
 const postSchema = {
   title: String,
@@ -25,39 +25,39 @@ const postSchema = {
 
 const Post = mongoose.model("Post", postSchema);
 
-app.get("/", function(req, res){
+app.get("/", function (req, res) {
 
-  Post.find({}, function(err, posts){
+  Post.find({}, function (err, posts) {
     res.render("home", {
       startingContent: homeStartingContent,
       posts: posts
-      });
+    });
   });
 });
 
-app.get("/compose", function(req, res){
+app.get("/compose", function (req, res) {
   res.render("compose");
 });
 
-app.post("/compose", function(req, res){
+app.post("/compose", function (req, res) {
   const post = new Post({
     title: req.body.postTitle,
     content: req.body.postBody
   });
 
 
-  post.save(function(err){
-    if (!err){
-        res.redirect("/");
+  post.save(function (err) {
+    if (!err) {
+      res.redirect("/");
     }
   });
 });
 
-app.get("/posts/:postId", function(req, res){
+app.get("/posts/:postId", function (req, res) {
 
-const requestedPostId = req.params.postId;
+  const requestedPostId = req.params.postId;
 
-  Post.findOne({_id: requestedPostId}, function(err, post){
+  Post.findOne({ _id: requestedPostId }, function (err, post) {
     res.render("post", {
       title: post.title,
       content: post.content
@@ -66,15 +66,74 @@ const requestedPostId = req.params.postId;
 
 });
 
-app.get("/about", function(req, res){
-  res.render("about", {aboutContent: aboutContent});
+
+
+//edit route
+app.get("/post/:postId/edit", (req, res) => {
+  const requestedPostId = req.params.postId;
+
+  Post.findOne({ _id: requestedPostId }, function (err, post) {
+    res.render("edit", {
+      id: post._id,
+      title: post.title,
+      content: post.content
+    });
+  });
+})
+
+app.post("/compose/:postId/edit", function (req, res) {
+  const requestedPostId = req.params.postId;
+
+  console.log(req.body)
+  const newPost = new Post({
+    title: req.body.postTitle,
+    content: req.body.postBody
+  });
+
+  Post.findOneAndDelete({ _id: requestedPostId }, function (err) {
+    if (err) {
+      console.log(err)
+      res.redirect('/');
+    } else {
+      newPost.save(function (err) {
+        if (!err) {
+          res.redirect("/");
+        }
+      });
+    }
+  })
+
+
+  // post.save(function (err) {
+  //   if (!err) {
+  //     res.redirect("/");
+  //   }
+  // });
 });
 
-app.get("/contact", function(req, res){
-  res.render("contact", {contactContent: contactContent});
+//delete route
+app.get("/post/:postId/delete", (req, res) => {
+  const requestedPostId = req.params.postId;
+
+  Post.findOneAndDelete({ _id: requestedPostId }, function (err) {
+    if (err) {
+      console.log(err)
+      res.redirect('/');
+    } else {
+      res.redirect('/');
+    }
+  })
+})
+
+app.get("/about", function (req, res) {
+  res.render("about", { aboutContent: aboutContent });
+});
+
+app.get("/contact", function (req, res) {
+  res.render("contact", { contactContent: contactContent });
 });
 
 
-app.listen(3000, function() {
+app.listen(3000, function () {
   console.log("Server started on port 3000");
 });

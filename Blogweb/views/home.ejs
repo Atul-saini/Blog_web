@@ -1,20 +1,22 @@
-
 <%- include("partials/header"); -%>
 
-    <h1>Home</h1>
-    <p> <%= startingContent %> </p>
+<h1>Home</h1>
+<p> <%= startingContent %> </p>
 
-  <%  posts.forEach(function(post){ %>
+<%  posts.forEach(function(post){ %>
 
-    <h1><%=post.title%></h1>
-    <p>
-    <%=post.content.substring(0, 100) + " ..."%>
-    <a href="/posts/<%=post._id%>">Read More</a>
-    </p>
-
-
-    <% }) %>
-    <button type="button" name="button " class=" btn btnn"><a href="/compose/">Add More</a></button>
+<h1><%=post.title%></h1>
+<p>
+  <%=post.content.substring(0, 100) + " ..."%>
+  <a href="/posts/<%=post._id%>">Read More</a>
+</p>
+<button class="btn"><a href="/post/<%=post._id%>/delete">Delete</a></button>
+<button class="btn"><a href="/post/<%=post._id%>/edit">Edit</a></button>
+<% }) %>
+<div>
+  <button style=" margin-top: 5px;" type="button" name="button " class=" btn btnn"><a href="/compose/">Add
+      More</a></button>
+</div>
 <h1>
 
 
